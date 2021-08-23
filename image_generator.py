@@ -9,6 +9,9 @@ class generate_images(object):
 
         # Model creation
         self.model = None
+        
+        # Model summary path
+        self.model_summary_path = "model_summary/"
 
         # Data collecting
         (self.trainX, self.trainY), (self.testX, self.testY) = mnist.load_data()
@@ -34,16 +37,18 @@ class generate_images(object):
         self.create_model()
 
         # Saves model
+        self.save_model_summary()
         
-
+        # Model evaluation 
+        self.model_evaluation()
 
     
     # Scale image
     def scale_images(self):
         
         # Scale image
-        train_iterator = datagen.flow(self.trainX, self.trainY, self.batch_size)
-        test_iterator = datagen.flow(self.testX, self.testY, self.batch_size)
+        train_iterator = self.datagen.flow(self.trainX, self.trainY, self.batch_size)
+        test_iterator = self.datagen.flow(self.testX, self.testY, self.batch_size)
     
 
     
@@ -51,7 +56,7 @@ class generate_images(object):
     def create_model(self):
 
         self.model = Sequential()
-        self.model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(width, height, channels)))
+        self.model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(self.width, self.height, self.channels)))
         self.model.add(MaxPooling2D((2, 2)))
 
         self.model.add(Conv2D(64, (3, 3), activation='relu'))
@@ -68,10 +73,25 @@ class generate_images(object):
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
         # Fit model with generator
-        model.fit_generator(train_iterator, steps_per_epoch=len(train_iterator), epochs=5)
+        self.model.fit_generator(train_iterator, steps_per_epoch=len(train_iterator), epochs=5)
 
         # Evaluate model
-        _, acc = model.evaluate_generator(test_iterator, steps=len(test_iterator), verbose=0)
+        _, acc = self.model.evaluate_generator(test_iterator, steps=len(test_iterator), verbose=0)
+
+
+
+    # save the model summery as a txt file
+    def save_model_summary(self):
+
+        with open(self.model_summary_path + "model_summary_architecture.txt", "w+") as model:
+            with redirect_stdout(model):
+                self.model.summary()
+
+
+
+
+
+
 
 
 

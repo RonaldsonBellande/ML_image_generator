@@ -7,3 +7,5 @@ from keras.layers import Dense
 from keras.layers import Flatten
 from keras.preprocessing.image import ImageDataGenerator
 from image_generator import *
+# For saving models
+from contextlib import redirect_stdout
