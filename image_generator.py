@@ -1,7 +1,7 @@
 from header_inputs import *
 
 
-class image_generator(self):
+class generate_images(object):
     def __init__(self):
 
         # Bash size
@@ -17,8 +17,8 @@ class image_generator(self):
         self.width, self.height, self.channels = self.trainX.shape[1], self.trainX.shape[2], 1
     
         # Reshape dataset
-        self.trainX = self.trainX.reshape((self.trainX.shape[0], width, height, channels))
-        self.testX = self.testX.reshape((self.testX.shape[0], width, height, channels))
+        self.trainX = self.trainX.reshape((self.trainX.shape[0], self.width, self.height, self.channels))
+        self.testX = self.testX.reshape((self.testX.shape[0], self.width, self.height, self.channels))
 
         # Encode
         self.trainY = to_categorical(self.trainY)
@@ -26,6 +26,15 @@ class image_generator(self):
 
         # Scalling
         self.datagen = ImageDataGenerator(rescale=1.0/255.0)
+
+        # Scale images
+        self.scale_images()
+
+        # Generate model
+        self.create_model()
+
+        # Saves model
+        
 
 
     
