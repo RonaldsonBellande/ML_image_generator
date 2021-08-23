@@ -1,4 +1,6 @@
 from header_inputs import *
+# For saving models
+from contextlib import redirect_stdout
 
 
 class generate_images(object):
@@ -47,8 +49,8 @@ class generate_images(object):
     def scale_images(self):
         
         # Scale image
-        train_iterator = self.datagen.flow(self.trainX, self.trainY, self.batch_size)
-        test_iterator = self.datagen.flow(self.testX, self.testY, self.batch_size)
+        self.train_iterator = self.datagen.flow(self.trainX, self.trainY, self.batch_size)
+        self.test_iterator = self.datagen.flow(self.testX, self.testY, self.batch_size)
     
 
     
@@ -73,10 +75,10 @@ class generate_images(object):
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
         # Fit model with generator
-        self.model.fit_generator(train_iterator, steps_per_epoch=len(train_iterator), epochs=5)
+        self.model.fit_generator(self.train_iterator, steps_per_epoch=len(self.train_iterator), epochs=5)
 
         # Evaluate model
-        _, acc = self.model.evaluate_generator(test_iterator, steps=len(test_iterator), verbose=0)
+        _, acc = self.model.evaluate_generator(self.test_iterator, steps=len(self.test_iterator), verbose=0)
 
 
 
